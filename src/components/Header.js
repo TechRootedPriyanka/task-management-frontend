@@ -20,26 +20,18 @@ const Header = () => {
           <Link
             variant="button"
             color="text.primary"
-            href="#"
-            sx={{ my: 1, mx: 1.5 }}
-          >
-            About us
-          </Link>
-          <Link
-            variant="button"
-            color="text.primary"
-            href="#"
-            sx={{ my: 1, mx: 1.5 }}
-          >
-            Contact us
-          </Link>
-          <Link
-            variant="button"
-            color="text.primary"
             href="/login"
             sx={{ my: 1, mx: 1.5 }}
           >
             Log in
+          </Link>
+          <Link
+            variant="button"
+            color="text.primary"
+            href="/logout"
+            sx={{ my: 1, mx: 1.5 }}
+          >
+            Log out
           </Link>
           <Link
             variant="button"
@@ -72,6 +64,14 @@ const Header = () => {
             sx={{ my: 1, mx: 1.5 }}
           >
             Task
+          </Link>
+          <Link
+            variant="button"
+            color="text.primary"
+            href="/Users"
+            sx={{ my: 1, mx: 1.5 }}
+          >
+            allusers
           </Link>
         </nav>
       </Toolbar>

@@ -1,24 +1,27 @@
 // BoardsPage.js
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Typography, Card, CardContent } from '@mui/material';
-import firebaseApp from "./firebase";
 import Header from './Header';
+import { Button, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const BoardsPage = () => {
+  // Define state to hold the list of boards
   const [boards, setBoards] = useState([]);
 
+  // Fetch the list of boards from your backend API
   useEffect(() => {
-    // Fetch boards from the database or any other source
     const fetchBoards = async () => {
       try {
-        // Example: Fetch boards from Firebase
-        const boardsSnapshot = await firebaseApp.firestore().collection('boards').get();
-        const boardList = boardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setBoards(boardList);
+        const response = await fetch('http://localhost:3000/boards');
+        if (response.ok) {
+          const data = await response.json();
+          setBoards(data);
+        } else {
+          console.error('Failed to fetch boards:', response.statusText);
+        }
       } catch (error) {
-        console.error('Error fetching boards:', error);
+        console.error('Failed to fetch boards:', error.message);
       }
     };
 
@@ -26,24 +29,22 @@ const BoardsPage = () => {
   }, []);
 
   return (
-    <div>
-       <Header /> 
-      <Typography variant="h5">Boards</Typography>
-      <Button component={Link} to="/create-board" variant="contained" color="primary">
-        Create New Board
-      </Button>
-      {boards.map(board => (
-        <Card key={board.id} style={{ marginTop: '20px' }}>
-          <CardContent>
-            <Typography variant="h6">{board.name}</Typography>
-            <Typography variant="body1">{board.description}</Typography>
-            <Button component={Link} to={`/boards/${board.id}`} variant="outlined">
-              View Board
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <>
+      <Header />
+      <div>
+        <Typography variant="h3">Boards</Typography>
+        <ul>
+          {boards.map((board) => (
+            <li key={board.id}>
+              <Link to={`/boards/${board.id}`}>{board.title}</Link>
+            </li>
+          ))}
+        </ul>
+        <Button component={Link} to="/create-board" variant="contained" color="primary">
+          Create New Board
+        </Button>
+      </div>
+    </>
   );
 };
 
