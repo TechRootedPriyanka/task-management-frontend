@@ -60,7 +60,7 @@ const Header = () => {
           <Link
             variant="button"
             color="text.primary"
-            href="/"
+            href="/alltasks"
             sx={{ my: 1, mx: 1.5 }}
           >
             Task
