@@ -1,49 +1,61 @@
-// BoardsPage.js
 
-import React, { useState, useEffect } from 'react';
-import Header from './Header';
-import { Button, Typography } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { Typography, List, ListItem, ListItemText, Button } from "@mui/material";
 import { Link } from 'react-router-dom';
-
+import Header from "./Header";
 const BoardsPage = () => {
-  // Define state to hold the list of boards
   const [boards, setBoards] = useState([]);
 
-  // Fetch the list of boards from your backend API
   useEffect(() => {
+    // Fetch all boards data from the backend API
     const fetchBoards = async () => {
       try {
-        const response = await fetch('http://localhost:3000/boards');
+        const response = await fetch("http://localhost:3000/rooms", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
         if (response.ok) {
-          const data = await response.json();
-          setBoards(data);
+          const boardsData = await response.json();
+          setBoards(boardsData);
         } else {
-          console.error('Failed to fetch boards:', response.statusText);
+          console.error("Failed to fetch boards:", response.statusText);
         }
       } catch (error) {
-        console.error('Failed to fetch boards:', error.message);
+        console.error("Error fetching boards:", error.message);
       }
     };
 
     fetchBoards();
-  }, []);
+  }, []); // Empty dependency array means this effect runs once after initial render
 
   return (
     <>
       <Header />
       <div>
-        <Typography variant="h3">Boards</Typography>
-        <ul>
-          {boards.map((board) => (
-            <li key={board.id}>
-              <Link to={`/boards/${board.id}`}>{board.title}</Link>
-            </li>
-          ))}
-        </ul>
-        <Button component={Link} to="/create-board" variant="contained" color="primary">
-          Create New Board
-        </Button>
+        <Typography variant="h3">All Boards</Typography>
+        {boards.length === 0 ? (
+          <Typography>No boards available</Typography>
+        ) : (
+          <List>
+            {boards.map((board) => (
+              <ListItem key={board._id}>
+                <ListItemText primary={board.roomCode} />
+              </ListItem>
+            ))}
+          </List>
+        )}
       </div>
+      <Button
+        component={Link}
+        to="/create-board"
+        variant="contained"
+        color="primary"
+      >
+        Create New Board
+      </Button>
     </>
   );
 };

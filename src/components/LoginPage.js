@@ -1,12 +1,14 @@
-
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from './AuthContext';
+import { Button, TextField, Typography, Snackbar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Header from './Header';
-import { Button, TextField, Typography, Snackbar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: '', password: '' });
+
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailure, setOpenFailure] = useState(false);
 
@@ -19,10 +21,10 @@ const LoginPage = () => {
 
     try {
       // Send login data to your backend API
-      const response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -30,21 +32,29 @@ const LoginPage = () => {
       if (response.ok) {
         // User logged in successfully
         setOpenSuccess(true);
-        navigate('/boards'); // Redirect to dashboard page
+        // Assuming your backend returns token and userId upon successful login
+        const { token, userId } = await response.json();
+        // Set token and userId in the context
+        login(token, userId);
+        console.log(token + "fffffffffffffffffffff");
+        console.log(userId + "hhhhhhhhhhhhhhhhhhh");
+
+        // Redirect to profile page
+        navigate("/profile");
       } else {
-        console.error('Login failed:', response.statusText);
+        console.error("Login failed:", response.statusText);
         // Handle login error (e.g., display error message to user)
         setOpenFailure(true);
       }
     } catch (error) {
-      console.error('Login failed:', error.message);
+      console.error("Login failed:", error.message);
       // Handle login error (e.g., display error message to user)
       setOpenFailure(true);
     }
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpenSuccess(false);
@@ -53,14 +63,10 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header />
-      <div style={{ display: 'flex' }}>
-        <div
-          style={{
-            // Your background styling here
-          }}
-        />
-        <div style={{ width: '50%', display: 'block', margin: '150px' }}>
+    <Header />
+      <div style={{ display: "flex" }}>
+        <div />
+        <div style={{ width: "50%", display: "block", margin: "150px" }}>
           <Typography variant="h3">Log In</Typography>
           <br />
           <br />
@@ -114,4 +120,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

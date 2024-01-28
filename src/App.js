@@ -9,6 +9,7 @@ import UsersPage from "./components/UsersPage";
 import HomePage from "./components/HomePage";
 import CreateBoard from "./components/CreateBoard";
 import Logout from "./components/Logout";
+import Profile from "./components/Profile";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true); // Initially logged in for demonstration
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/boards" element={<BoardsPage />} />
         <Route path="/create-board" element={<CreateBoard />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/logout" element={<Logout onLogout={handleLogout} />} /> 
        
         {/* Other routes and components */}

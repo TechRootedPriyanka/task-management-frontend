@@ -1,45 +1,38 @@
-// Logout.js
-import React, { useState } from 'react';
+import React from 'react';
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Snackbar, Button } from '@mui/material';
 
-const Logout = ({ onLogout }) => {
+const Logout = () => {
   const navigate = useNavigate();
-  const [openSuccess, setOpenSuccess] = useState(false);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
 
-  const handleLogout = () => {
-    if (typeof onLogout === 'function') {
-      onLogout();
-      setOpenSuccess(true); // Show success message
-      navigate('/');
+      if (response.ok) {
+        // If logout is successful, clear local storage or perform any necessary cleanup actions
+        localStorage.removeItem('token');
+        // Redirect the user to the login page or any other page
+        
+        navigate('/')
+      } else {
+        // Handle error response
+        console.error('Logout failed:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
     }
-  };
-
-  const handleClose = (reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSuccess(false);
   };
 
   return (
     <div>
-      <button onClick={handleLogout}>Logout</button>
-
-      {/* Success Snackbar */}
-      <Snackbar
-        open={openSuccess}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message="Logout successful"
-        action={
-          <React.Fragment>
-            <Button color="secondary" size="small" onClick={handleClose}>
-              Close
-            </Button>
-          </React.Fragment>
-        }
-      />
+      <Button onClick={handleLogout} variant="contained" color="primary">
+        Logout
+      </Button>
     </div>
   );
 };
